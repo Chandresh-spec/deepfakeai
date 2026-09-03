@@ -27,6 +27,22 @@ import { ForensicCharts } from '../components/ForensicCharts'
 import { mediaService } from '../services/mediaService'
 import { analysisService } from '../services/analysisService'
 
+/**
+ * Shares the design system introduced on LandingPage — add once, globally:
+ * <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+ *
+ * Note: this page keeps the dark "examination room" palette rather than the
+ * paper "light table" surface used on the auth/profile pages, because it hosts
+ * MediaList, ForensicCharts, and MediaUploader — components whose internal
+ * styling isn't defined here, so a light paper background risks contrast
+ * issues for content this file doesn't control. The same color and type
+ * tokens (amber/brick/moss/steel, slab + mono) are used throughout instead.
+ */
+
+const slab = { fontFamily: '"Zilla Slab", Georgia, serif' }
+const sans = { fontFamily: '"IBM Plex Sans", ui-sans-serif, system-ui, sans-serif' }
+const mono = { fontFamily: '"IBM Plex Mono", ui-monospace, monospace' }
+
 export const DashboardPage: React.FC = () => {
   const { user, logout } = useAuth()
   const queryClient = useQueryClient()
@@ -94,97 +110,91 @@ export const DashboardPage: React.FC = () => {
   const userInitial = (user?.full_name ? user.full_name.charAt(0) : user?.email?.charAt(0) || 'A').toUpperCase()
 
   return (
-    <div className="h-screen flex flex-col bg-[#070b14] text-slate-100 font-sans antialiased overflow-hidden selection:bg-blue-500/30">
-      {/* ========== TOP NAVIGATION BAR ========== */}
-      <header className="shrink-0 h-16 border-b border-slate-800/80 bg-[#080d19]/90 backdrop-blur-xl z-20">
-        <div className="max-w-7xl mx-auto h-full px-6 flex items-center justify-between gap-4">
-          {/* Left: Brand + Page Title */}
+    <div className="h-screen flex flex-col bg-[#15130F] text-[#EDE7DA] antialiased overflow-hidden selection:bg-[#C97A2E]/30" style={sans}>
+      {/* ========== TOP BAR ========== */}
+      <header className="shrink-0 h-16 border-b border-[#2C2820] bg-[#1D1A14]/95 backdrop-blur-xl z-20">
+        <div className="w-full max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+          {/* Left: brand + breadcrumb */}
           <div className="flex items-center gap-5">
             <Link to="/dashboard" className="flex items-center gap-3 shrink-0 group">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 p-[1px] shadow-sm shadow-blue-500/20">
-                <div className="w-full h-full bg-[#090e1c] rounded-[7px] flex items-center justify-center">
-                  <Shield className="w-4 h-4 text-blue-400 group-hover:text-cyan-300 transition-colors" />
-                </div>
+              <div className="w-8 h-8 rounded border border-[#C97A2E]/50 flex items-center justify-center">
+                <Shield className="w-4 h-4 text-[#C97A2E]" />
               </div>
               <div className="hidden sm:block">
-                <span className="text-[15px] font-semibold text-white tracking-tight leading-tight block">
+                <span className="text-[15px] font-semibold text-[#F5F1E6] tracking-tight leading-tight block" style={slab}>
                   DeepForensics
                 </span>
-                <span className="text-[9px] text-cyan-400 font-mono font-bold uppercase tracking-wider leading-none block mt-0.5">
-                  STUDIO WORKSPACE
+                <span className="text-[9px] text-[#8B8272] tracking-wide leading-none block mt-0.5" style={mono}>
+                  Studio workspace
                 </span>
               </div>
             </Link>
 
-            <div className="h-5 w-px bg-slate-800 hidden sm:block" />
+            <div className="h-5 w-px bg-[#2C2820] hidden sm:block" />
 
-            {/* Breadcrumb / Location */}
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-slate-300">Workspace</span>
-              <span className="text-slate-600">/</span>
-              <span className="text-xs font-semibold text-white">Overview</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold font-mono border border-emerald-500/20 flex items-center gap-1">
-                <span className="w-1 h-1 rounded-full bg-emerald-400" />
-                LIVE
+              <span className="text-xs font-medium text-[#B8AF9C]">Workspace</span>
+              <span className="text-[#4A4436]">/</span>
+              <span className="text-xs font-semibold text-[#F5F1E6]">Overview</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#6B8F6A]/10 text-[#8FB58E] font-semibold border border-[#6B8F6A]/25 flex items-center gap-1" style={mono}>
+                <span className="w-1 h-1 rounded-full bg-[#8FB58E]" />
+                Live
               </span>
             </div>
           </div>
 
-          {/* Right: Actions + Profile */}
+          {/* Right: actions + profile */}
           <div className="flex items-center gap-3">
-            {/* Quick Upload Action */}
             <button
               onClick={() => setIsUploaderOpen(true)}
-              className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs shadow-xs shadow-blue-500/25 transition-all flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 rounded bg-[#C97A2E] hover:bg-[#E2924A] text-[#15130F] font-semibold text-xs transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <UploadCloud className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Upload Media</span>
+              <span className="hidden sm:inline">Upload media</span>
             </button>
 
-            {/* Refresh Queries */}
             <button
               onClick={() => {
                 refetchMedia()
                 refetchAnalyses()
                 toast.success('Workspace telemetry refreshed')
               }}
-              className="p-2 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors"
-              title="Refresh Workspace"
+              className="p-2 rounded border border-[#2C2820] hover:border-[#3A352A] text-[#8B8272] hover:text-[#F5F1E6] transition-colors"
+              title="Refresh workspace"
             >
               <RefreshCw className="w-3.5 h-3.5" />
             </button>
 
-            {/* Notification Bell */}
-            <button className="relative p-2 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-colors">
+            <button className="relative p-2 rounded border border-[#2C2820] hover:border-[#3A352A] text-[#8B8272] hover:text-[#F5F1E6] transition-colors">
               <Bell className="w-3.5 h-3.5" />
-              <span className="absolute 1 top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-blue-500" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-[#C97A2E]" />
             </button>
 
-            {/* Profile Dropdown */}
+            {/* Profile dropdown */}
             <div className="relative">
               <button
                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                className="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition-all text-left cursor-pointer"
+                className="flex items-center gap-2 pl-1.5 pr-2.5 py-1.5 rounded border border-[#2C2820] hover:border-[#3A352A] transition-all text-left cursor-pointer"
               >
-                <div className="w-6 h-6 rounded-md bg-blue-500/15 text-cyan-300 font-semibold text-xs flex items-center justify-center font-mono border border-cyan-500/20">
+                <div className="w-6 h-6 rounded-full border border-[#C97A2E]/60 text-[#C97A2E] font-semibold text-xs flex items-center justify-center" style={mono}>
                   {userInitial}
                 </div>
-                <span className="hidden md:block text-xs font-medium text-slate-200 max-w-[120px] truncate">
+                <span className="hidden md:block text-xs font-medium text-[#D8D0BE] max-w-[120px] truncate">
                   {displayName}
                 </span>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+                <ChevronDown className="w-3.5 h-3.5 text-[#6B6250]" />
               </button>
 
               {profileMenuOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-xl bg-[#0d1322] border border-slate-800 shadow-2xl py-1.5 z-50 divide-y divide-slate-800/70">
+                <div className="absolute right-0 mt-2 w-56 rounded-sm bg-[#EDE6D3] text-[#201B12] shadow-[0_20px_40px_-15px_rgba(0,0,0,0.6)] py-1.5 z-50 divide-y divide-[#C9BFA4]">
                   <div className="px-3.5 py-2.5">
-                    <p className="text-xs font-semibold text-white truncate">{displayName}</p>
-                    <p className="text-[10px] text-slate-400 font-mono truncate">{user?.email}</p>
+                    <p className="text-xs font-semibold text-[#201B12] truncate">{displayName}</p>
+                    <p className="text-[10px] text-[#6B6250] truncate" style={mono}>{user?.email}</p>
                     <div className="mt-1.5 flex items-center gap-1.5">
-                      <span className="inline-block px-1.5 py-0.5 text-[9px] font-bold font-mono uppercase rounded bg-blue-500/15 text-cyan-300 border border-cyan-500/25">
+                      <span className="inline-block px-1.5 py-0.5 text-[9px] font-semibold border border-[#C97A2E] text-[#8A4E17]" style={mono}>
                         {user?.role || 'ANALYST'}
                       </span>
-                      <span className="text-[10px] text-emerald-400 flex items-center gap-1">
+                      <span className="text-[10px] text-[#4F7350] flex items-center gap-1">
                         <CheckCircle2 className="w-2.5 h-2.5" /> Online
                       </span>
                     </div>
@@ -194,20 +204,20 @@ export const DashboardPage: React.FC = () => {
                     <Link
                       to="/profile"
                       onClick={() => setProfileMenuOpen(false)}
-                      className="flex items-center gap-2 px-3.5 py-2 text-xs text-slate-300 hover:text-white hover:bg-slate-800/50 transition-colors"
+                      className="flex items-center gap-2 px-3.5 py-2 text-xs text-[#4A4436] hover:bg-white/40 transition-colors"
                     >
-                      <User className="w-3.5 h-3.5 text-blue-400" />
-                      Account Settings
+                      <User className="w-3.5 h-3.5 text-[#C97A2E]" />
+                      Account settings
                     </Link>
                   </div>
 
                   <div className="pt-1">
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-3.5 py-2 text-xs text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                      className="w-full flex items-center gap-2 px-3.5 py-2 text-xs text-[#B5493A] hover:bg-[#B5493A]/10 transition-colors cursor-pointer"
                     >
                       <LogOut className="w-3.5 h-3.5" />
-                      Sign Out
+                      Sign out
                     </button>
                   </div>
                 </div>
@@ -217,123 +227,89 @@ export const DashboardPage: React.FC = () => {
         </div>
       </header>
 
-      {/* ========== SCROLLABLE MAIN CONTENT ========== */}
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-7xl mx-auto px-6 py-8 space-y-7">
+      {/* ========== SCROLLABLE CONTENT ========== */}
+      <main className="flex-1 overflow-y-auto bg-[#100E0A]">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-7">
 
-          {/* Welcome Header */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-slate-800/60">
+          {/* Welcome header */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-[#2C2820]">
             <div className="space-y-1">
-              <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
-                Analyst Studio Overview
+              <h2 className="text-xl sm:text-2xl font-bold text-[#F5F1E6]" style={slab}>
+                Analyst studio overview
               </h2>
-              <p className="text-xs sm:text-sm text-slate-400 font-normal">
+              <p className="text-xs sm:text-sm text-[#B8AF9C]">
                 Multi-modal forensic investigation workspace. Monitor model verdicts and inspect media provenance.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-              <Clock className="w-3.5 h-3.5 text-slate-500" />
-              <span>Session: Active</span>
-              <span className="text-slate-700">•</span>
-              <span className="text-slate-500">ISO 27037 Standard</span>
+            <div className="flex items-center gap-3 text-xs text-[#8B8272]" style={mono}>
+              <span className="flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5" />
+                Session active
+              </span>
+              <span className="pl-3 border-l border-[#2C2820] text-[#6B6250]">ISO 27037 standard</span>
             </div>
           </div>
 
-          {/* 4 Clean Minimalist Stat Cards */}
+          {/* Stat cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            {/* Card 1 */}
-            <div className="p-5 rounded-xl bg-[#0b101e] border border-slate-800 hover:border-slate-700 transition-all flex items-center justify-between group">
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wider font-mono">
-                  TOTAL ANALYSES
-                </span>
-                <div className="text-2xl font-bold text-white font-mono leading-none">
-                  {totalAnalyses}
-                </div>
-                <span className="text-[11px] text-emerald-400 font-medium font-mono block">
-                  +100% active stream
-                </span>
-              </div>
-              <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:text-blue-300 transition-colors">
-                <BarChart3 className="w-5 h-5" />
-              </div>
-            </div>
+            {[
+              { label: 'Total analyses', value: totalAnalyses, note: 'Active stream', icon: BarChart3, tone: 'amber' as const },
+              { label: 'Authentic media', value: authenticCount, note: 'Verified genuine assets', icon: ShieldCheck, tone: 'moss' as const },
+              { label: 'Deepfakes detected', value: suspiciousCount, note: 'Synthesized artifacts', icon: AlertTriangle, tone: 'brick' as const },
+              { label: 'Avg confidence', value: avgConfidence, note: 'Multi-model consensus', icon: Activity, tone: 'steel' as const },
+            ].map(({ label, value, note, icon: Icon, tone }) => {
+              const toneMap = {
+                amber: { text: 'text-[#C97A2E]', border: 'border-[#C97A2E]/25', bg: 'bg-[#C97A2E]/10' },
+                moss: { text: 'text-[#8FB58E]', border: 'border-[#6B8F6A]/25', bg: 'bg-[#6B8F6A]/10' },
+                brick: { text: 'text-[#D08573]', border: 'border-[#B5493A]/25', bg: 'bg-[#B5493A]/10' },
+                steel: { text: 'text-[#9BC0D9]', border: 'border-[#5F84A0]/25', bg: 'bg-[#5F84A0]/10' },
+              }[tone]
 
-            {/* Card 2 */}
-            <div className="p-5 rounded-xl bg-[#0b101e] border border-slate-800 hover:border-slate-700 transition-all flex items-center justify-between group">
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider font-mono">
-                  AUTHENTIC MEDIA
-                </span>
-                <div className="text-2xl font-bold text-white font-mono leading-none">
-                  {authenticCount}
+              return (
+                <div key={label} className="p-5 rounded-sm bg-[#1D1A14] border border-[#2C2820] hover:border-[#3A352A] transition-all flex items-center justify-between">
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] font-semibold text-[#8B8272] tracking-wide" style={mono}>
+                      {label}
+                    </span>
+                    <div className="text-2xl font-bold text-[#F5F1E6] leading-none" style={mono}>
+                      {value}
+                    </div>
+                    <span className="text-[11px] text-[#6B6250] block">{note}</span>
+                  </div>
+                  <div className={`w-10 h-10 rounded-full border flex items-center justify-center ${toneMap.border} ${toneMap.bg} ${toneMap.text}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
                 </div>
-                <span className="text-[11px] text-slate-400 font-mono block">Verified genuine assets</span>
-              </div>
-              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 group-hover:text-emerald-300 transition-colors">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-            </div>
-
-            {/* Card 3 */}
-            <div className="p-5 rounded-xl bg-[#0b101e] border border-slate-800 hover:border-slate-700 transition-all flex items-center justify-between group">
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider font-mono">
-                  DEEPFAKES DETECTED
-                </span>
-                <div className="text-2xl font-bold text-white font-mono leading-none">
-                  {suspiciousCount}
-                </div>
-                <span className="text-[11px] text-slate-400 font-mono block">Synthesized artifacts</span>
-              </div>
-              <div className="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 group-hover:text-red-300 transition-colors">
-                <AlertTriangle className="w-5 h-5" />
-              </div>
-            </div>
-
-            {/* Card 4 */}
-            <div className="p-5 rounded-xl bg-[#0b101e] border border-slate-800 hover:border-slate-700 transition-all flex items-center justify-between group">
-              <div className="space-y-1.5">
-                <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider font-mono">
-                  AVG CONFIDENCE
-                </span>
-                <div className="text-2xl font-bold text-white font-mono leading-none">
-                  {avgConfidence}
-                </div>
-                <span className="text-[11px] text-slate-400 font-mono block">Multi-model consensus</span>
-              </div>
-              <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 group-hover:text-indigo-300 transition-colors">
-                <Activity className="w-5 h-5" />
-              </div>
-            </div>
+              )
+            })}
           </div>
 
-          {/* Charts Row */}
-          <div className="rounded-xl border border-slate-800 bg-[#0b101e] p-5 shadow-xs">
+          {/* Charts */}
+          <div className="rounded-sm border border-[#2C2820] bg-[#1D1A14] p-5">
             <ForensicCharts analyses={analysesList} />
           </div>
 
-          {/* Bottom Grid: Media Library & Right Panel */}
+          {/* Bottom grid */}
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-            {/* Left Area (2/3): Media Library */}
+            {/* Media library */}
             <div className="xl:col-span-2 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
-                    EVIDENCE MEDIA REPOSITORY
+                  <h3 className="text-xs font-semibold tracking-wide text-[#D8D0BE]" style={mono}>
+                    Evidence media repository
                   </h3>
-                  <span className="text-[10px] font-mono text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">
-                    {mediaFiles.length} Assets
+                  <span className="text-[10px] text-[#8B8272] bg-[#1D1A14] px-2 py-0.5 rounded border border-[#2C2820]" style={mono}>
+                    {mediaFiles.length} assets
                   </span>
                 </div>
 
                 <button
                   onClick={() => setIsUploaderOpen(true)}
-                  className="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1 cursor-pointer"
+                  className="text-xs font-medium text-[#C97A2E] hover:text-[#E2924A] transition-colors flex items-center gap-1 cursor-pointer"
                 >
                   <UploadCloud className="w-3.5 h-3.5" />
-                  <span>New Upload</span>
+                  <span>New upload</span>
                 </button>
               </div>
 
@@ -346,22 +322,22 @@ export const DashboardPage: React.FC = () => {
               />
             </div>
 
-            {/* Right Area (1/3): Recent AI Verdicts & Security */}
+            {/* Right column */}
             <div className="xl:col-span-1 space-y-5">
-              {/* Recent AI Verdicts Card */}
-              <div className="p-5 rounded-xl bg-[#0b101e] border border-slate-800 shadow-xs space-y-3.5">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+              {/* Recent verdicts */}
+              <div className="p-5 rounded-sm bg-[#1D1A14] border border-[#2C2820] space-y-3.5">
+                <div className="flex items-center justify-between pb-3 border-b border-[#2C2820]">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-blue-400" />
-                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
-                      RECENT AI VERDICTS
+                    <Clock className="w-3.5 h-3.5 text-[#C97A2E]" />
+                    <h3 className="text-xs font-semibold tracking-wide text-[#D8D0BE]" style={mono}>
+                      Recent AI verdicts
                     </h3>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-500">Live feed</span>
+                  <span className="text-[10px] text-[#6B6250]" style={mono}>Live feed</span>
                 </div>
 
                 {analysesList.length === 0 ? (
-                  <div className="text-center py-8 text-xs text-slate-500 font-mono">
+                  <div className="text-center py-8 text-xs text-[#6B6250]" style={mono}>
                     No analyses executed yet. Upload media to begin inspection.
                   </div>
                 ) : (
@@ -372,50 +348,40 @@ export const DashboardPage: React.FC = () => {
                       const isAuth = item.label === 'authentic'
                       const confPct = Math.round((item.confidence || 0) * 100)
 
+                      const stateTone = isManip
+                        ? { text: 'text-[#D08573]', bg: 'bg-[#B5493A]/10', badgeBorder: 'border-[#B5493A]/30' }
+                        : isAuth
+                        ? { text: 'text-[#8FB58E]', bg: 'bg-[#6B8F6A]/10', badgeBorder: 'border-[#6B8F6A]/30' }
+                        : { text: 'text-[#9BC0D9]', bg: 'bg-[#5F84A0]/10', badgeBorder: 'border-[#5F84A0]/30' }
+
                       return (
                         <div
                           key={item.id || idx}
                           onClick={() => handleInspectMedia(item.media_id)}
-                          className="flex items-center justify-between gap-3 p-2.5 rounded-lg bg-slate-900/60 hover:bg-slate-900 border border-slate-800/70 hover:border-slate-700 cursor-pointer transition-all group"
+                          className="flex items-center justify-between gap-3 p-2.5 rounded bg-[#15130F]/60 hover:bg-[#15130F] border border-[#2C2820] hover:border-[#3A352A] cursor-pointer transition-all group"
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <div
-                              className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 ${
-                                isManip
-                                  ? 'bg-red-500/10 text-red-400'
-                                  : isAuth
-                                  ? 'bg-emerald-500/10 text-emerald-400'
-                                  : 'bg-amber-500/10 text-amber-400'
-                              }`}
-                            >
+                            <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${stateTone.bg} ${stateTone.text}`}>
                               <Cpu className="w-3.5 h-3.5" />
                             </div>
                             <div className="min-w-0">
                               <p
-                                className="text-xs font-semibold text-slate-200 truncate group-hover:text-cyan-300 transition-colors"
+                                className="text-xs font-semibold text-[#D8D0BE] truncate group-hover:text-[#F5F1E6] transition-colors"
                                 title={fn}
                               >
                                 {fn.length > 20 ? `${fn.slice(0, 18)}...` : fn}
                               </p>
-                              <p className="text-[10px] text-slate-500 font-mono">
+                              <p className="text-[10px] text-[#6B6250]" style={mono}>
                                 {item.provider || 'realitydefender'}
                               </p>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-2 shrink-0 font-mono">
-                            <span
-                              className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${
-                                isManip
-                                  ? 'bg-red-500/15 text-red-400 border border-red-500/25'
-                                  : isAuth
-                                  ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
-                                  : 'bg-amber-500/15 text-amber-400 border border-amber-500/25'
-                              }`}
-                            >
+                          <div className="flex items-center gap-2 shrink-0" style={mono}>
+                            <span className={`px-1.5 py-0.5 rounded text-[9px] font-semibold border ${stateTone.text} ${stateTone.bg} ${stateTone.badgeBorder}`}>
                               {item.label}
                             </span>
-                            <span className="text-xs text-slate-300 font-semibold">{confPct}%</span>
+                            <span className="text-xs text-[#D8D0BE] font-semibold">{confPct}%</span>
                           </div>
                         </div>
                       )
@@ -424,56 +390,56 @@ export const DashboardPage: React.FC = () => {
                 )}
               </div>
 
-              {/* Active Session & Security Card */}
-              <div className="p-5 rounded-xl bg-[#0b101e] border border-slate-800 shadow-xs space-y-3.5">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
+              {/* Session security */}
+              <div className="p-5 rounded-sm bg-[#1D1A14] border border-[#2C2820] space-y-3.5">
+                <div className="flex items-center justify-between pb-3 border-b border-[#2C2820]">
                   <div className="flex items-center gap-2">
-                    <Shield className="w-3.5 h-3.5 text-blue-400" />
-                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-300">
-                      SESSION SECURITY
+                    <Shield className="w-3.5 h-3.5 text-[#C97A2E]" />
+                    <h3 className="text-xs font-semibold tracking-wide text-[#D8D0BE]" style={mono}>
+                      Session security
                     </h3>
                   </div>
-                  <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    Encrypted ●
+                  <span className="text-[10px] text-[#8FB58E] bg-[#6B8F6A]/10 px-2 py-0.5 rounded border border-[#6B8F6A]/25" style={mono}>
+                    Encrypted
                   </span>
                 </div>
 
                 <div className="space-y-3 text-xs">
                   <div className="flex items-start gap-2.5">
-                    <User className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                    <User className="w-4 h-4 text-[#C97A2E] shrink-0 mt-0.5" />
                     <div className="min-w-0">
-                      <p className="font-semibold text-slate-200 font-mono truncate text-xs">
+                      <p className="font-semibold text-[#D8D0BE] truncate text-xs" style={mono}>
                         {user?.email}
                       </p>
-                      <span className="text-[10px] text-slate-500 uppercase font-mono">
+                      <span className="text-[10px] text-[#6B6250]" style={mono}>
                         Tier: {user?.role || 'ANALYST'}
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-2.5 pt-1">
-                    <Lock className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                    <Lock className="w-4 h-4 text-[#9BC0D9] shrink-0 mt-0.5" />
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="font-semibold text-slate-200 text-xs">
-                          JWT Bearer Session
+                        <span className="font-semibold text-[#D8D0BE] text-xs">
+                          JWT bearer session
                         </span>
-                        <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-purple-500/15 text-purple-300 border border-purple-500/25">
+                        <span className="px-1.5 py-0.5 rounded text-[9px] font-semibold bg-[#5F84A0]/10 text-[#9BC0D9] border border-[#5F84A0]/25" style={mono}>
                           AUTH-V2
                         </span>
                       </div>
-                      <span className="text-[10px] text-slate-500 font-mono block mt-0.5">
-                        SHA-256 Protected Workspace
+                      <span className="text-[10px] text-[#6B6250] block mt-0.5" style={mono}>
+                        SHA-256 protected workspace
                       </span>
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-slate-800/80">
+                  <div className="pt-3 border-t border-[#2C2820]">
                     <Link
                       to="/profile"
-                      className="text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors inline-flex items-center gap-1"
+                      className="text-xs font-semibold text-[#C97A2E] hover:text-[#E2924A] transition-colors inline-flex items-center gap-1"
                     >
-                      Manage Account & Tokens <ArrowRight className="w-3 h-3" />
+                      Manage account & tokens <ArrowRight className="w-3 h-3" />
                     </Link>
                   </div>
                 </div>
@@ -495,4 +461,3 @@ export const DashboardPage: React.FC = () => {
     </div>
   )
 }
-
