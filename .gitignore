@@ -1,0 +1,72 @@
+# ============================================
+# Root .gitignore — Deepfake & Media Forensics Platform
+# ============================================
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+*.whl
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# ---- Node ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ---- Build outputs ----
+frontend/dist/
+*.tsbuildinfo
+
+# ---- Environment ----
+.env
+!.env.example
+backend/.env
+!backend/.env.example
+frontend/.env
+!frontend/.env.example
+
+# ---- IDE ----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ---- Docker ----
+docker_run_error.log
+
+# ---- Uploads ----
+uploads/
+backend/uploads/
+
+# ---- Testing ----
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ---- Research / Scratch Dumps ----
+sensity_*
+backend/sensity_*
+
+# ---- Misc ----
+*.log
+*.bak
+*.tmp
+
